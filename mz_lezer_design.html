@@ -725,10 +725,10 @@ footer{background:var(--surface);padding:48px clamp(40px,7vw,100px);border-top:1
       <div class="sec-tag">Ajánlatkérés</div>
       <h2 class="sec-h2" style="margin-bottom:32px">Ingyenes <span class="bl">ajánlat</span></h2>
       <div class="fg"><label>Neve *</label><input type="text" placeholder="Teljes neve" id="cname"></div>
-      <div class="fg"><label>Telefonszám *</label><input type="tel" placeholder="+36 ..."></div>
-      <div class="fg"><label>E-mail cím</label><input type="email" placeholder="pelda@email.hu"></div>
+      <div class="fg"><label>Telefonszám *</label><input type="tel" placeholder="+36 ..." id="cphone"></div>
+      <div class="fg"><label>E-mail cím</label><input type="email" placeholder="pelda@email.hu" id="cemail"></div>
       <div class="fg"><label>Érdeklődés tárgya</label>
-        <select>
+        <select id="csubj">
           <option value="">Válasszon...</option>
           <option>Lézervágott kerítés</option>
           <option>Alumínium kapu</option>
@@ -738,7 +738,7 @@ footer{background:var(--surface);padding:48px clamp(40px,7vw,100px);border-top:1
           <option>Egyéb</option>
         </select>
       </div>
-      <div class="fg"><label>Üzenet</label><textarea placeholder="Írja le röviden, miben segíthetünk — méret, elképzelés, határidő..."></textarea></div>
+      <div class="fg"><label>Üzenet</label><textarea placeholder="Írja le röviden, miben segíthetünk — méret, elképzelés, határidő..." id="cmsg"></textarea></div>
       <button class="form-btn" id="sbtn">Ajánlatot kérek — visszahívunk 24h-n belül →</button>
     </div>
   </div>
@@ -805,11 +805,50 @@ function initReveal(){
 }
 initReveal();
 
-// form submit
-document.getElementById('sbtn').addEventListener('click',function(){
-  const v=document.getElementById('cname').value;
-  if(!v){this.textContent='⚠ Kérem adja meg a nevét!';this.style.background='#c0392b';setTimeout(()=>{this.textContent='Ajánlatot kérek — visszahívunk 24h-n belül →';this.style.background='';},2500);return;}
-  this.textContent='✓ Köszönjük! Hamarosan felvesszük Önnel a kapcsolatot.';this.style.background='#1a6b3a';
+// form submit via Formspree
+document.getElementById('sbtn').addEventListener('click', async function(){
+  const btn = this;
+  const name  = document.getElementById('cname').value.trim();
+  const phone = document.getElementById('cphone').value.trim();
+  const email = document.getElementById('cemail').value.trim();
+  const subj  = document.getElementById('csubj').value;
+  const msg   = document.getElementById('cmsg').value.trim();
+
+  if(!name){ btn.textContent='⚠ Kérem adja meg a nevét!'; btn.style.background='#c0392b'; setTimeout(()=>{btn.textContent='Ajánlatot kérek — visszahívunk 24h-n belül →';btn.style.background='';},2500); return; }
+  if(!phone){ btn.textContent='⚠ Kérem adja meg a telefonszámát!'; btn.style.background='#c0392b'; setTimeout(()=>{btn.textContent='Ajánlatot kérek — visszahívunk 24h-n belül →';btn.style.background='';},2500); return; }
+
+  btn.textContent='⏳ Küldés...'; btn.disabled=true; btn.style.background='#555';
+
+  try {
+    const res = await fetch('https://formspree.io/f/xgvewqjb', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body: JSON.stringify({
+        nev: name,
+        telefon: phone,
+        email: email || '(nem adta meg)',
+        erdeklodes: subj || '(nem választott)',
+        uzenet: msg || '(nem írt üzenetet)',
+        _subject: 'Új ajánlatkérés — MZ Lézer Design'
+      })
+    });
+    if(res.ok){
+      btn.textContent='✓ Köszönjük! Hamarosan felvesszük Önnel a kapcsolatot.';
+      btn.style.background='#1a6b3a';
+      document.getElementById('cname').value='';
+      document.getElementById('cphone').value='';
+      document.getElementById('cemail').value='';
+      document.getElementById('csubj').value='';
+      document.getElementById('cmsg').value='';
+    } else {
+      throw new Error('hiba');
+    }
+  } catch(e){
+    btn.textContent='⚠ Hiba történt. Kérjük hívjon minket: +36 30 955 4185';
+    btn.style.background='#c0392b';
+    btn.disabled=false;
+    setTimeout(()=>{btn.textContent='Ajánlatot kérek — visszahívunk 24h-n belül →';btn.style.background='';btn.disabled=false;},4000);
+  }
 });
 </script>
 </body>
