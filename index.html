@@ -37,10 +37,10 @@ nav{position:fixed;top:0;left:0;right:0;z-index:999;height:72px;display:flex;ali
 .nav-cta:hover{background:#c9521a!important;color:#fff!important;}
 
 /* ── HERO ── */
-.hero{position:relative;height:calc(100vh - 72px);min-height:620px;margin-top:72px;overflow:hidden;display:flex;align-items:center;}
+.hero{position:relative;height:100vh;min-height:600px;margin-top:0;padding-top:72px;overflow:hidden;display:flex;align-items:center;}
 .hero-bg{position:absolute;inset:0;background:#0d0d0d;}
-.hero-bg img{width:100%;height:100%;object-fit:cover;object-position:60% center;display:block;}
-.hero-overlay{position:absolute;inset:0;background:linear-gradient(105deg,rgba(8,8,8,.95) 0%,rgba(8,8,8,.85) 38%,rgba(8,8,8,.4) 65%,rgba(8,8,8,.1) 100%);}
+.hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center center;display:block;}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(8,8,8,.7) 0%,rgba(8,8,8,.5) 40%,rgba(8,8,8,.75) 100%);}
 .hero-content{position:relative;z-index:2;padding:0 80px;max-width:680px;}
 .hero-pre{display:flex;align-items:center;gap:12px;margin-bottom:22px;font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:4px;text-transform:uppercase;color:var(--orange);font-weight:700;}
 .hero-pre-line{width:36px;height:2px;background:var(--orange);}
@@ -270,7 +270,9 @@ footer{background:var(--dark2);border-top:1px solid var(--border);padding:60px 6
   .nav-cta{background:var(--orange)!important;color:#fff!important;margin:16px auto!important;display:inline-block!important;width:calc(100% - 48px)!important;padding:14px 24px!important;text-align:center!important;}
 
   /* HERO */
-  .hero{min-height:100svh;min-height:100vh;margin-top:60px;}
+  .hero{height:100vh;min-height:100svh;margin-top:0;padding-top:60px;}
+  .hero-bg img{object-position:center center;}
+  .hero-overlay{background:linear-gradient(to bottom,rgba(8,8,8,.8) 0%,rgba(8,8,8,.45) 50%,rgba(8,8,8,.7) 100%);}
   .hero-content{padding:0 20px 40px;max-width:100%;}
   .hero h1{font-size:clamp(30px,8vw,48px);line-height:1.05;}
   .hero-sub{font-size:14px;line-height:1.6;max-width:100%;}
